@@ -75,7 +75,7 @@ exec --no-startup-id zim
 
 ## configure `i3bar'
 
-bar {
+bar {{
     status_command i3status
     # making the bar at least 12pt is required to make the notification area usable on my highest density LCD (~ 110 PPI)
     font pango:DejaVu Sans Mono 12

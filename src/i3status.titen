@@ -3,7 +3,7 @@
 
 ## General setup for the whole bar
 
-general {
+general {{
     colors = true
     interval = 1
     # for laptop (or older i3 where the battery clock cannot be formatted...)
@@ -23,28 +23,28 @@ order += "tztime local"
 
 ## Configuration for the individual widgets themselves
 
-cpu_temperature 0 {
+cpu_temperature 0 {{
     format = "%degrees °C"
     path = "/sys/devices/platform/coretemp.0/temp1_input"
 }
 
-wireless wlan0 {
+wireless wlan0 {{
     format_up = "%quality %essid %ip"
     format_down = "down"
 }
 
-battery 0 {
+battery 0 {{
     format = "%status %percentage %remaining"
     # otherwise the battery capacity is shown as a float, which makes no sense
     integer_battery_capacity = true
 }
 
-load {
+load {{
     # only really care about the 1 minute load averages at a glance
     format = "%1min"
 }
 
-tztime local {
+tztime local {{
     # roughly ISO-8601 format, e.g. "Thu 1970-01-01 12:00 AM"
     format = "%a %Y-%m-%d %-I:%M %p"
 }
