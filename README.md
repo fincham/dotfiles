@@ -1,5 +1,5 @@
-dotfiles
-========
+fincham's dotfiles
+==================
 
 ~/.*-ish
 
