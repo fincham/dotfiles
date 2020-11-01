@@ -19,6 +19,8 @@ clean:
 build: $(TEMPLATE_TARGETS) $(COPY_TARGETS)
 
 install: build
+	install -m 750 -d ~/.local/bin
+
 	install -m 640 build/vimrc ~/.vimrc
 	install -m 640 build/bashrc ~/.bashrc
 
@@ -28,5 +30,7 @@ install: build
 	
 	install -m 700 -d ~/.ssh
 	install -m 640 build/ssh ~/.ssh/config
+
+	install -m 640 build/tmux ~/.tmux.conf
 
 .PHONY: usage build install clean
