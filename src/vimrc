@@ -7,8 +7,9 @@ set autoindent
 set background=dark
 set pastetoggle=<F10>
 
+filetype indent plugin on
+
 " Want makefiles to have real tabs (gross, but necessary)
-filetype on
 autocmd FileType make set tabstop=8 noexpandtab shiftwidth=8 softtabstop=0
 
 "" Tom's Wisdom (mostly from https://sanctum.geek.nz/cgit/dotfiles.git)
