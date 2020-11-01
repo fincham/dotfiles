@@ -39,7 +39,7 @@ def string_lower(text):
     return text.lower()
 
 
-string_lower.__name__ = "upper"
+string_lower.__name__ = "lower"
 
 
 def string_strip(text):
