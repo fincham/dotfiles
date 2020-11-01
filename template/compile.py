@@ -13,7 +13,7 @@ def compile_template(input_filename):
     else:
         template_string = open(input_filename).read()
 
-    template.titen._titen_globals["settings"] = settings
+    template.titen._titen_globals['settings'] = settings
     return template.titen.titen(template_string)()
 
 

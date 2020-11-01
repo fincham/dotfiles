@@ -30,16 +30,22 @@ from cgi import escape
 # compatibility functions to replace the old string.foo stuff in python 2
 def string_upper(text):
     return text.upper()
+
+
 string_upper.__name__ = "upper"
 
 
 def string_lower(text):
     return text.lower()
+
+
 string_lower.__name__ = "upper"
 
 
 def string_strip(text):
     return text.strip()
+
+
 string_strip.__name__ = "strip"
 
 

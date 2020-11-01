@@ -11,6 +11,7 @@ import os
 import socket
 
 hostname = socket.gethostname()
+run_dir = os.environ.get('XDG_RUNTIME_DIR', '/run/user/%i' % os.getuid())
 
 # if the machine has a battery, it's probably at least a bit portable. this is used later for "laptop specific" stuff.
 batteries = [
