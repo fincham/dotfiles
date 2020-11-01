@@ -21,7 +21,10 @@ build: $(TEMPLATE_TARGETS) $(COPY_TARGETS)
 install: build
 	install -m 750 -d ~/.local/bin
 
+	install -m 750 -d ~/.vim/colors
 	install -m 640 build/vimrc ~/.vimrc
+	install -m 640 build/sahara.vim ~/.vim/colors/sahara.vim
+
 	install -m 640 build/bashrc ~/.bashrc
 
 	install -m 700 -d ~/.gnupg
