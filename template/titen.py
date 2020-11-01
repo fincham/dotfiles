@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re, types
 import string
-from cgi import escape
+from html import escape
 
 # compatibility functions to replace the old string.foo stuff in python 2
 def string_upper(text):
