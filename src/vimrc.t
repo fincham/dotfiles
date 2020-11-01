@@ -1,0 +1,164 @@
+" ~/.vimrc
+
+"" Michael's preferences
+
+set number
+set autoindent
+set background=dark
+set pastetoggle=<F10>
+
+"" Tom's Wisdom (mostly from https://sanctum.geek.nz/cgit/dotfiles.git/)
+
+" Don't make any effort to be compatible with vi, use more sensible settings
+set nocompatible
+
+" Use backup features if on a UNIX-like system and not using sudo(8)
+if !strlen($SUDO_USER) && has('unix')
+  " Keep backups with a .bak extension in ~/.vim/backup; the double-slash at
+  " the end of the directory is supposed to prod Vim into keeping the full
+  " path to the file in its backup filename to avoid collisions, but I don't
+  " think it actually works for backups, just undo and swap files
+  set backup
+  set backupext=.bak
+  set backupdir^=~/.vim/backup//
+
+  " This option already includes various temporary directories, but we
+  " append to it so that we don't back up anything in a shared memory
+  " filesystem either
+  set backupskip+=*/shm/*
+
+  " Create the backup directory if necessary and possible
+  if !isdirectory($HOME . '/.vim/backup') && exists('*mkdir')
+    call mkdir($HOME . '/.vim/backup', 'p', 0700)
+  endif
+
+" Don't use backups at all otherwise
+else
+  set nobackup
+  set nowritebackup
+endif
+
+" Options dependent on the syntax feature
+if has('syntax')
+
+  " Use syntax highlighting
+  syntax enable
+
+  " Use my custom color scheme if possible, otherwise I'm happy with whatever
+  " the default is, and it usually cares about my background
+  set background=dark
+  silent! colorscheme sahara
+
+  " Don't syntax highlight beyond 300 characters; mostly for efficiency
+  " reasons, but also useful for prodding me into breaking up unreadable
+  " long lines as well when writing code
+  if exists('&synmaxcol')
+    set synmaxcol=300
+  endif
+endif
+
+" Command-line based features
+if has('cmdline_info')
+  " Show my current position in the status bar
+  set ruler
+
+  " Show the keystrokes being entered in the screen
+  set showcmd
+
+  " Show the mode we're using if not normal mode (e.g. --INSERT--)
+  set showmode
+endif
+
+" Use UTF-8 by default wherever possible
+if has('multi_byte')
+  set encoding=utf-8
+endif
+
+" Use spaces instead of tabs
+set expandtab
+
+" Indent with four spaces when an indent operation is used
+set shiftwidth=4
+
+" Insert four spaces when Tab is pressed
+set softtabstop=4
+
+" How many spaces to show for a literal tab when 'list' is unset
+set tabstop=4
+
+" Indent intelligently to 'shiftwidth' at the starts of lines with Tab, but
+" use 'tabstop' everywhere else
+set smarttab
+
+" When indenting lines with < or >, round the indent to a multiple of
+" 'shiftwidth', so even if the line is indented by one space it will indent
+" up to 4 and down to 0, for example
+set shiftround
+
+" Don't join lines with two spaces at the end of sentences; I don't two-space,
+" despite the noble Steve Losh's exhortations
+set nojoinspaces
+
+" If the Vim buffer for a file doesn't have any changes and Vim detects the
+" file has been altered, quietly update it
+set autoread
+
+" Swap files are used if using Unix and not using sudo(8); I very seldom need
+" them, but they are occasionally useful after a crash, and they don't really
+" get in the way if kept in their own directory
+if !strlen($SUDO_USER) && has('unix')
+
+  " Use swap files but keep them in ~/.vim/swap; the double-slash at the end
+  " of the directory prods Vim into keeping the full path to the file in its
+  " undo filename to avoid collisions; the same thing works for undo files
+  set swapfile
+  set directory^=~/.vim/swap//
+
+  " Create the ~/.vim/swap directory if necessary and possible
+  if !isdirectory($HOME . '/.vim/swap') && exists('*mkdir')
+    call mkdir($HOME . '/.vim/swap', 'p', 0700)
+  endif
+
+  " Don't keep swap files for files in temporary directories or shared memory
+  " filesystems; this is because they're used as scratch spaces for tools
+  " like sudoedit(8) and pass(1) and hence could present a security problem
+  if has('autocmd')
+    augroup swapskip
+      autocmd!
+      silent! autocmd BufNewFile,BufReadPre
+          \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
+          \ setlocal noswapfile
+    augroup END
+  endif
+
+" Otherwise, don't use swap files at all
+else
+  set noswapfile
+endif
+
+" Keep undo history in a separate file if the feature is available, we're on
+" Unix, and not using sudo(8); this goes really well with undo visualization
+" plugins like Gundo or Undotree.
+if !strlen($SUDO_USER) && has('unix') && has('persistent_undo')
+
+  " Keep per-file undo history in ~/.vim/undo; the double-slash at the end
+  " of the directory prods Vim into keeping the full path to the file in its
+  " undo filename to avoid collisions; the same thing works for swap files
+  set undofile
+  set undodir^=~/.vim/undo//
+
+  " Create the ~/.vim/undo directory if necessary and possible
+  if !isdirectory($HOME . '/.vim/undo') && exists('*mkdir')
+    call mkdir($HOME . '/.vim/undo', 'p', 0700)
+  endif
+
+  " Don't track changes to sensitive files
+  if has('autocmd')
+    augroup undoskip
+      autocmd!
+      silent! autocmd BufWritePre
+          \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
+          \ setlocal noundofile
+    augroup END
+  endif
+endif
