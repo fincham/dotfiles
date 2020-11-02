@@ -5,7 +5,7 @@ TEMPLATE_TARGETS = $(addprefix $(BUILD),$(subst $(TEMPLATE),,$(shell ls $(SOURCE
 COPY_TARGETS = $(addprefix $(BUILD),$(shell ls $(SOURCE) | grep -v -E \\.t$))
 
 usage:
-	@echo "Run 'make install' to build and overwrite any existing files in ~, or 'sudo make system-install' to add system-wide configurations."
+	@echo "Run 'make install' to build and overwrite any existing files in ~, or 'sudo make perfect' to perform system-wide configurations (one day)."
 
 $(TEMPLATE_TARGETS): $(BUILD)%: $(SOURCE)%$(TEMPLATE)
 	python3 -m template.compile $< > $@
