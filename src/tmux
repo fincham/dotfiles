@@ -58,11 +58,6 @@ bind-key j select-pane -D
 bind-key k select-pane -U
 bind-key l select-pane -R
 
-# Vim-like keys for visual mode and yanking therefrom
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
-bind-key -t vi-copy Escape cancel
-
 # Join and break panes
 bind-key J choose-window "join-pane -h -s '%%'"
 bind-key B break-pane -d
