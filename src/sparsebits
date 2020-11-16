@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+
+"""
+An ugly way to work out a list of sparsely-allocated subnets, e.g.
+
+$ ./sparsebits 8
+0
+128
+64
+192
+32
+160
+
+And so on. Basically it's counting up in binary but from the "wrong end" of the number.
+
+Michael Fincham <michael@hotplate.co.nz> 2020-11-16
+"""
+
+import sys
+
+if __name__ == "__main__":
+    bits = int(sys.argv[1], 10)
+
+    for m in range(0,2**bits):
+        print(int(format(m, "#0%ib" % (bits + 2))[2:][::-1], 2))

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Display a selector in rofi for picking emoji. 
+# Michael Fincham <michael@hotplate.co.nz> 2020-11-16
+
+if [ ! -f ~/.local/opt/emoji ]; then
+    echo "error: you need to run emoji-update at least once to download the list of emoji!"
+    exit 1
+fi
+
+emoji="$(rofi -match fuzzy -sort -monitor -2 -dmenu -i -p emoji < ~/.local/opt/emoji  | sed -e 's/ .*//')"
+printf %s "$emoji" | xdotool type --clearmodifiers --file -
+

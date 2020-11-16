@@ -4,8 +4,12 @@ TEMPLATE = .t
 TEMPLATE_TARGETS = $(addprefix $(BUILD),$(subst $(TEMPLATE),,$(shell ls $(SOURCE) | grep -E \\.t$)))
 COPY_TARGETS = $(addprefix $(BUILD),$(shell ls $(SOURCE) | grep -v -E \\.t$))
 
+DEBIAN_PACKAGES = bash curl fzf rofi xdotool
+MISSING_PACKAGES := $(strip $(foreach exec,$(DEBIAN_PACKAGES), $(if $(shell dpkg-query -W $(exec)),,$(exec))))
+
+# utilities
 usage:
-	@echo "Run 'make install' to build and overwrite any existing files in ~, or 'sudo make system-install' to add system-wide configurations."
+	@echo "Run 'make install' to build and overwrite any existing files in ~, or 'sudo make perfect' to add system-wide configurations (Debian only, for now)."
 
 $(TEMPLATE_TARGETS): $(BUILD)%: $(SOURCE)%$(TEMPLATE)
 	python3 -m template.compile $< > $@
@@ -13,13 +17,20 @@ $(TEMPLATE_TARGETS): $(BUILD)%: $(SOURCE)%$(TEMPLATE)
 $(COPY_TARGETS): $(BUILD)%: $(SOURCE)%
 	cp $< $@
 
+# build stages
 clean:
 	rm $(BUILD)*
 
 build: $(TEMPLATE_TARGETS) $(COPY_TARGETS)
 
-install: build
+dependencies: 
+ifneq ($(MISSING_PACKAGES),)
+	$(warning You had some missing packages ($(MISSING_PACKAGES)). On Debian you can use "sudo make install-packages" to install these.)
+endif
+
+install: build dependencies
 	install -m 750 -d ~/.local/bin
+	install -m 750 -d ~/.local/opt
 
 	install -m 750 -d ~/.vim/colors
 	install -m 640 build/vimrc ~/.vimrc
@@ -36,4 +47,15 @@ install: build
 
 	install -m 640 build/tmux ~/.tmux.conf
 
-.PHONY: usage build install clean
+	# local tools
+	install -m 750 build/emoji-menu ~/.local/bin/emoji-menu
+	install -m 750 build/emoji-update ~/.local/bin/emoji-update
+	install -m 750 build/fuzz ~/.local/bin/fuzz
+	install -m 750 build/pass-menu ~/.local/bin/pass-menu
+	install -m 750 build/sparsebits ~/.local/bin/sparsebits
+	install -m 750 build/zzz ~/.local/bin/zzz
+
+install-packages:
+	apt install $(MISSING_PACKAGES)
+
+.PHONY: usage build install clean dependencies install-packages

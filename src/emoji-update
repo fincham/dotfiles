@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Downloads and converts the Unicode Consortium emoji list. You won't necessarily have glyphs for everything.
+# Michael Fincham <michael@hotplate.co.nz> 2020-11-16
+
+mkdir -p ~/.local/opt || exit 1
+curl -s https://unicode.org/Public/emoji/13.1/emoji-test.txt | grep "; fully-qualified" | sed -e 's/^.*; fully-qualified     # \(.*\)E[^ ]* \(.*\)$/\1 \2/' > ~/.local/opt/emoji

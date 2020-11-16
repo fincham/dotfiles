@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Ensure the screen locks then put the computer to sleep.
+# May conflict with OpenBSD's base "zzz" command, generally for Linux laptops with systemd only.
+# Michael Fincham <michael@hotplate.co.nz> 2020-11-16
+
+if xscreensaver-command -lock; then
+    sleep 2
+    systemctl suspend
+fi
