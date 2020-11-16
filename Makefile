@@ -58,4 +58,4 @@ install: build dependencies
 install-packages:
 	apt install $(MISSING_PACKAGES)
 
-.PHONY: usage build install clean dependencies install-packages
+.PHONY: build clean dependencies install install-packages usage
