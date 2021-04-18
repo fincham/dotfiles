@@ -1,64 +1,78 @@
 # ~/.bashrc
 
-export "PATH=${HOME}/.local/bin:${PATH}"
+# Exit if not running interactively
+if [[ $- != *i* ]] ; then
+    return
+fi
 
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+## Shell configuration
 
+# Keep around sixteen million lines of history in file
+HISTFILESIZE=$((2 ** 24))
+
+# Keep around four thousand lines of history in memory
+HISTSIZE=$((2 ** 12))
+
+# Ignore duplicate commands and whitespace in history
 HISTCONTROL=ignoreboth
-shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=2000
+
+# Keep the times of the commands in history
+HISTTIMEFORMAT='%F %T '
+
+# Update columns and rows if window size changes
 shopt -s checkwinsize
-shopt -s globstar
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 0 0 >&/dev/null; then
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-fi
-
-alias ip="ip -c=auto"
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
+# Force programmable completion features to be enabled
+if [[ -f /usr/share/bash-completion/bash_completion ]]; then
     . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
+elif [[ -f /etc/bash_completion ]]; then
     . /etc/bash_completion
-  fi
 fi
+
+## Prompt
+
+# Make root's shell an obvious bright red, all other shells green
+if [[ ${EUID} == 0 ]] ; then
+    PS1='\[\033[01;31m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+fi
+
+## External tools
+
+# If 'lesspipe' is installed, make 'less' able to read binaries and things
+if [[ -x /usr/bin/lesspipe ]]; then
+    eval "$(SHELL=/bin/sh lesspipe)"
+fi
+
+# If 'dircolors' is installed, make 'ls' output colourised
+if [[ -x /usr/bin/dircolors ]]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls="ls --color=auto"
+fi
+
+# Configure 'quilt' for Debian packaging
+alias dquilt="quilt --quiltrc=${HOME}/.quiltrc-dpkg"
+complete -F _quilt_completion $_quilt_complete_opt dquilt
+
+## Environment
+
+# If an xterm-alike is in use, set the titlebar and force 256 colour mode
+case "${TERM}" in
+    xterm*|rxvt*)
+        PS1="\[\e]0;\u@\h: \w\a\]$PS1"
+        export TERM="xterm-256color"
+    ;;
+    *)
+    ;;
+esac
+
+# Used by dch and other Debian tools
+export NAME="Michael Fincham"
+export DEBEMAIL="michael@hotplate.co.nz"
+
+# Look for any personal opt directories
+personal_opt=$(shopt -s nullglob; printf ":%s" ${HOME}/.local/opt/*/bin)
+export PATH="${HOME}/.local/bin${personal_opt%%:}:${PATH}"
+
+export EDITOR="vim"
