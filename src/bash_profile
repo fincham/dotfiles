@@ -1,0 +1,7 @@
+# ~/.bash_profile
+# Managed by https://git.sr.ht/~fincham/dotfiles
+# This file just exists to overwrite any existing ~/.bash_profile
+
+if [ -f "$HOME/.profile" ]; then
+    . "$HOME/.profile"
+fi

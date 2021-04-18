@@ -1,7 +1,7 @@
 # ~/.bashrc
 # Managed by https://git.sr.ht/~fincham/dotfiles
 
-# Exit if not running interactively
+# Exit if not running interactively (this happens with e.g. SSH)
 if [[ $- != *i* ]] ; then
     return
 fi

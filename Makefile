@@ -38,6 +38,7 @@ install: build dependencies
 
 	install -m 640 build/bashrc ~/.bashrc
 	install -m 640 build/profile ~/.profile
+	install -m 640 build/bash_profile ~/.bash_profile
 
 	install -m 700 -d ~/.gnupg
 	install -m 600 build/gpg-agent ~/.gnupg/gpg-agent.conf

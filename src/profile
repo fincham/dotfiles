@@ -1,11 +1,13 @@
 # ~/.profile
 # Managed by https://git.sr.ht/~fincham/dotfiles
 
+## Set up login environment
+
 # Look for any ~/.local/opt installations in a POSIX-friendly way
 local_opt="$(find "${HOME}/.local/opt" -maxdepth 2 -type d -name bin -print0 2>/dev/null | tr '\0' :)"
 export PATH="${HOME}/.local/bin:${local_opt%:}:$PATH"
 
-# If this is bash then do bash-specific things as well
+# Ensure interactive login shells are handled correctly as well
 if [ -n "$BASH_VERSION" ]; then
     if [ -f "$HOME/.bashrc" ]; then
 	    . "$HOME/.bashrc"
