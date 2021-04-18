@@ -5,7 +5,7 @@ TEMPLATE_TARGETS = $(addprefix $(BUILD),$(subst $(TEMPLATE),,$(shell ls $(SOURCE
 COPY_TARGETS = $(addprefix $(BUILD),$(shell ls $(SOURCE) | grep -v -E \\.t$))
 
 DEBIAN_PACKAGES = bash curl fzf rofi xdotool
-MISSING_PACKAGES := $(strip $(foreach exec,$(DEBIAN_PACKAGES), $(if $(shell dpkg-query -W $(exec)),,$(exec))))
+MISSING_PACKAGES := $(strip $(foreach exec,$(DEBIAN_PACKAGES), $(if $(shell dpkg-query 2>/dev/null -W $(exec)),,$(exec))))
 
 # utilities
 usage:
