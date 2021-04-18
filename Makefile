@@ -37,6 +37,7 @@ install: build dependencies
 	install -m 640 build/sahara.vim ~/.vim/colors/sahara.vim
 
 	install -m 640 build/bashrc ~/.bashrc
+	install -m 640 build/profile ~/.profile
 
 	install -m 700 -d ~/.gnupg
 	install -m 600 build/gpg-agent ~/.gnupg/gpg-agent.conf

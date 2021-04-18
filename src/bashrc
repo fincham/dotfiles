@@ -1,4 +1,5 @@
 # ~/.bashrc
+# Managed by https://git.sr.ht/~fincham/dotfiles
 
 # Exit if not running interactively
 if [[ $- != *i* ]] ; then
@@ -41,19 +42,21 @@ fi
 ## External tools
 
 # If 'lesspipe' is installed, make 'less' able to read binaries and things
-if [[ -x /usr/bin/lesspipe ]]; then
+if hash lesspipe 2>/dev/null; then
     eval "$(SHELL=/bin/sh lesspipe)"
 fi
 
 # If 'dircolors' is installed, make 'ls' output colourised
-if [[ -x /usr/bin/dircolors ]]; then
+if hash dircolors 2>/dev/null; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls="ls --color=auto"
 fi
 
 # Configure 'quilt' for Debian packaging
-alias dquilt="quilt --quiltrc=${HOME}/.quiltrc-dpkg"
-complete -F _quilt_completion $_quilt_complete_opt dquilt
+if hash quilt 2>/dev/null; then
+    alias dquilt="quilt --quiltrc=${HOME}/.quiltrc-dpkg"
+    complete -F _quilt_completion $_quilt_complete_opt dquilt
+fi
 
 ## Environment
 
@@ -71,8 +74,5 @@ esac
 export NAME="Michael Fincham"
 export DEBEMAIL="michael@hotplate.co.nz"
 
-# Look for any personal opt directories
-personal_opt=$(shopt -s nullglob; printf ":%s" ${HOME}/.local/opt/*/bin)
-export PATH="${HOME}/.local/bin${personal_opt%%:}:${PATH}"
-
+# PATH is set in ~/.profile, set any other environment here...
 export EDITOR="vim"
